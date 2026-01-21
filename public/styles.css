@@ -1,0 +1,79 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 1rem 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+main {
+  padding: 2rem;
+  text-align: center;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+#court-map {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-height: 500px; /* Ajustar el tamaño máximo del contenedor */
+  overflow-y: auto; /* Agregar barra de desplazamiento vertical si es necesario */
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.seat {
+  width: 50px; /* Aumentar el tamaño del asiento */
+  height: 50px; /* Aumentar el tamaño del asiento */
+  margin: 5px;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  line-height: 50px; /* Ajustar el texto al centro */
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px; /* Aumentar el tamaño de la fuente para mejor legibilidad */
+}
+
+.seat.occupied {
+  background-color: #f44336;
+  cursor: not-allowed;
+}
