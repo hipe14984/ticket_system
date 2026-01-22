@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Richard | Experiencia Gastronómica</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary-color: #d4af37; /* Gold */
+            --bg-dark: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.7);
+            --text-main: #f0f0f0;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(66, 133, 244, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5 { font-weight: 700; letter-spacing: -0.5px; }
+        .text-gold { color: var(--primary-color) !important; }
+
+        /* Custom Header */
+        .hero-section {
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));
+            margin-bottom: 1rem;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Navigation */
+        .nav-pills .nav-link {
+            color: rgba(255,255,255,0.7);
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            margin: 0 0.2rem;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.05);
+            border: var(--glass-border);
+        }
+        .nav-pills .nav-link.active {
+            background: var(--primary-color);
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Product Cards */
+        .product-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        .product-img-wrapper {
+            position: relative;
+            padding-top: 60%; /* Aspect Ratio */
+            overflow: hidden;
+        }
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+        .card-body {
+            padding: 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .price-tag {
+            background: rgba(255,255,255,0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: auto;
+            display: inline-block;
+        }
+
+        /* Floating Cart Button */
+        .fab-cart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+        }
+        .fab-cart:hover { transform: scale(1.1); }
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid var(--bg-dark);
+        }
+
+        /* Modal Customization */
+        .modal-content {
+            background: #1a1a1a;
+            border: var(--glass-border);
+            border-radius: 20px;
+        }
+        .modal-header { border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .modal-footer { border-top: 1px solid rgba(255,255,255,0.1); }
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            color: #000;
+            font-weight: 600;
+            padding: 0.6rem 2rem;
+            border-radius: 12px;
+        }
+        .btn-primary:hover {
+            background: #b5952f;
+            color: #000;
+        }
+        
+        /* Quantity Controls */
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: white;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .qty-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* Loading Overlay */
+        #loader {
+            position: fixed; inset: 0; background: var(--bg-dark); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; transition: opacity 0.5s;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary-color); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <img src="./assets/logosinletra.png" width="80" class="mb-3" alt="Loading...">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="hero-section container">
+        <img src="./assets/logosinletra.png" alt="Richard Logo" class="hero-logo">
+        <h2 class="mb-1 text-gold">Menú Richard</h2>
+        <p class="text-muted small text-uppercase letter-spacing-2">Alta Gastronomía</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="container mb-4 sticky-top bg-dark pt-2 pb-2" style="background-color: var(--bg-dark) !important; z-index: 100;">
+        <ul class="nav nav-pills justify-content-center flex-nowrap overflow-auto" id="menuTabs" style="scrollbar-width: none;">
+            <!-- Dinamico -->
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container pb-5" style="min-height: 80vh">
+        <div class="tab-content" id="myTabContent">
+            <!-- Dinamico -->
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <button class="fab-cart" data-bs-toggle="modal" data-bs-target="#cartModal">
+        <i class="bi bi-cart3"></i>
+        <div class="cart-badge" id="cartBadge">0</div>
+    </button>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tu Orden <i class="bi bi-bag-check ms-2 text-gold"></i></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="emptyCartMsg" class="text-center py-5 d-none">
+                        <i class="bi bi-cart-x display-1 text-muted"></i>
+                        <p class="mt-3 text-muted">Tu carrito está vacío</p>
+                    </div>
+                    
+                    <div id="cartContent">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle">
+                                <tbody id="cartItems"></tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-4 p-3 rounded" style="background: rgba(255,255,255,0.05)">
+                            <h5 class="mb-0">Total Estimado</h5>
+                            <div class="text-end">
+                                <h4 class="text-gold mb-0">$<span id="cartTotalUSD">0.00</span></h4>
+                                <small class="text-muted">Bs <span id="cartTotalBS">0.00</span></small>
+                            </div>
+                        </div>
+
+                        <hr class="border-secondary my-4">
+                        
+                        <h6 class="mb-3 text-gold">Método de Pago</h6>
+                        <select id="paymentMethod" class="form-select form-select-lg bg-dark text-white border-secondary mb-3">
+                            <option value="pagoMovil">📱 Pago Móvil</option>
+                            <option value="transferencia">🏦 Transferencia Bancaria</option>
+                            <option value="efectivo">💵 Efectivo ($)</option>
+                        </select>
+                        
+                        <div id="paymentFields"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light border-0" data-bs-dismiss="modal">Seguir pidiendo</button>
+                    <button id="checkoutBtn" class="btn btn-primary">
+                        Enviar Pedido por WhatsApp <i class="bi bi-whatsapp ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // CONFIG
+        const GOOGLE_SHEET_ID = '2PACX-1vR6wP2-YnZwmO2eKXmoo9K_x0rgMC3XiuLqjvbX9fA0_9MfKBspYdK26e1Rvdphg4bMA5l_ShYpOBwD';
+        const BASE_URL = `https://docs.google.com/spreadsheets/d/e/${GOOGLE_SHEET_ID}/pub`;
+        const WHATSAPP_NUM = '+58123456789';
+
+        // STATE
+        let state = {
+            menu: [],
+            params: {},
+            rate: 0,
+            cart: JSON.parse(localStorage.getItem('richardCart')) || []
+        };
+
+        // DOM ELEMENTS
+        const ui = {
+            tabs: document.getElementById('menuTabs'),
+            content: document.getElementById('myTabContent'),
+            cartBadge: document.getElementById('cartBadge'),
+            cartItems: document.getElementById('cartItems'),
+            cartTotalUSD: document.getElementById('cartTotalUSD'),
+            cartTotalBS: document.getElementById('cartTotalBS'),
+            paymentMethod: document.getElementById('paymentMethod'),
+            emptyMsg: document.getElementById('emptyCartMsg'),
+            cartContent: document.getElementById('cartContent'),
+            loader: document.getElementById('loader')
+        };
+
+        // INIT
+        async function init() {
+            try {
+                // Remove cache buster to avoid CORS/Network issues
+                // const dateParam = `&t=${Date.now()}`;
+                
+                const [menuData, metaData, rateData] = await Promise.all([
+                    fetch(`${BASE_URL}?gid=0&single=true&output=tsv`).then(r => {
+                        if (!r.ok) throw new Error(`Error ${r.status} al cargar Menú`);
+                        return r.text();
+                    }),
+                    fetch(`${BASE_URL}?gid=575315305&single=true&output=tsv`).then(r => {
+                         if (!r.ok) throw new Error(`Error ${r.status} al cargar Datos`);
+                        return r.text();
+                    }),
+                    fetch(`${BASE_URL}?gid=559086749&single=true&output=tsv`).then(r => {
+                         if (!r.ok) throw new Error(`Error ${r.status} al cargar Tasa`);
+                        return r.text();
+                    })
+                ]);
+
+                state.menu = parseTSV(menuData);
+                const metas = parseTSV(metaData);
+                const rates = parseTSV(rateData);
+                
+                if (!rates.length || !rates[0].tasa) throw new Error("No se pudo leer la tasa del dólar");
+                state.rate = parseFloat(rates[0].tasa);
+                
+                // Group by section
+                const sections = {};
+                state.menu.forEach(item => {
+                    // Normalize section name
+                    if (item.seccion) {
+                        const s = item.seccion.trim();
+                        if (!sections[s]) sections[s] = [];
+                        sections[s].push(item);
+                    }
+                });
+
+                renderApp(sections);
+                updateCartUI();
+                
+                // Remove loader
+                setTimeout(() => {
+                    ui.loader.style.opacity = '0';
+                    setTimeout(() => ui.loader.remove(), 500);
+                }, 800);
+
+            } catch (error) {
+                console.error("Error loading data", error);
+                alert(`Error: ${error.message}. Por favor verifica tu conexión.`);
+                // Remove loader so user isn't stuck
+                 ui.loader.style.display = 'none';
+            }
+        }
+
+        // PARSER
+        function parseTSV(text) {
+            const [headerLine, ...lines] = text.trim().split('\n');
+            const headers = headerLine.split('\t').map(h => h.trim());
+            return lines.map(line => {
+                const values = line.split('\t');
+                return headers.reduce((obj, header, i) => {
+                    obj[header] = values[i];
+                    return obj;
+                }, {});
+            });
+        }
+
+        // RENDER
+        function renderApp(sections) {
+            let idx = 0;
+            for (const [sectionName, items] of Object.entries(sections)) {
+                const isActive = idx === 0;
+                const tabId = `tab-${idx}`;
+
+                // Tab
+                ui.tabs.innerHTML += `
+                    <li class="nav-item">
+                        <button class="nav-link ${isActive ? 'active' : ''}" 
+                            data-bs-toggle="pill" data-bs-target="#${tabId}" type="button">
+                            ${sectionName}
+                        </button>
+                    </li>`;
+
+                // Content
+                let gridHtml = `<div class="row g-4 justify-content-center">`;
+                items.forEach(item => {
+                    const priceUSD = parseFloat(item.precioDolares).toFixed(2);
+                    const priceBs = (priceUSD * state.rate).toFixed(2);
+                    
+                    gridHtml += `
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="product-card">
+                            <div class="product-img-wrapper">
+                                <img src="${item.Imagen}" class="product-img" alt="${item.nombreProducto}" 
+                                     onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-white mb-1">${item.nombreProducto}</h5>
+                                <p class="card-text text-muted small flex-grow-1">${item.descripcion}</p>
+                                <div class="d-flex justify-content-between align-items-end mt-3">
+                                    <div>
+                                        <div class="price-tag">$${priceUSD}</div>
+                                        <div class="small text-muted mt-1">Bs ${priceBs}</div>
+                                    </div>
+                                    <button class="btn btn-primary rounded-circle p-0" style="width:40px;height:40px"
+                                        onclick="addToCart('${item.nombreProducto}', ${priceUSD})">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                gridHtml += `</div>`;
+
+                ui.content.innerHTML += `
+                    <div class="tab-pane fade ${isActive ? 'show active' : ''}" id="${tabId}">
+                        <h3 class="mb-4 text-gold border-start border-3 border-warning ps-3">${sectionName}</h3>
+                        ${gridHtml}
+                    </div>`;
+                
+                idx++;
+            }
+        }
+
+        // CART LOGIC
+        window.addToCart = (name, price) => {
+            const existing = state.cart.find(p => p.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                state.cart.push({ name, price: parseFloat(price), qty: 1 });
+            }
+            saveCart();
+            updateCartUI();
+            
+            // Visual feedback could be added here
+            const toast = document.createElement('div');
+            toast.className = 'position-fixed bottom-0 start-50 translate-middle-x mb-5 badge bg-success p-2';
+            toast.style.zIndex = '2000';
+            toast.innerText = 'Agregado al carrito';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 1500);
+        }
+
+        window.updateQty = (index, change) => {
+            state.cart[index].qty += change;
+            if (state.cart[index].qty <= 0) {
+                state.cart.splice(index, 1);
+            }
+            saveCart();
+            updateCartUI();
+        }
+
+        function saveCart() {
+            localStorage.setItem('richardCart', JSON.stringify(state.cart));
+        }
+
+        function updateCartUI() {
+            // Badge
+            const totalItems = state.cart.reduce((acc, item) => acc + item.qty, 0);
+            ui.cartBadge.innerText = totalItems;
+            
+            // Empty State
+            if (state.cart.length === 0) {
+                ui.emptyMsg.classList.remove('d-none');
+                ui.cartContent.classList.add('d-none');
+                document.getElementById('checkoutBtn').disabled = true;
+                return;
+            }
+            
+            ui.emptyMsg.classList.add('d-none');
+            ui.cartContent.classList.remove('d-none');
+            document.getElementById('checkoutBtn').disabled = false;
+
+            // List
+            ui.cartItems.innerHTML = '';
+            let totalUSD = 0;
+
+            state.cart.forEach((item, i) => {
+                const itemTotal = item.price * item.qty;
+                totalUSD += itemTotal;
+                
+                ui.cartItems.innerHTML += `
+                    <tr>
+                        <td class="text-white">
+                            <div class="fw-bold">${item.name}</div>
+                            <small class="text-muted">$${item.price.toFixed(2)} c/u</small>
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm w-auto flex-nowrap align-items-center bg-dark rounded-pill border border-secondary p-1">
+                                <button class="qty-btn" onclick="updateQty(${i}, -1)"><i class="bi bi-dash"></i></button>
+                                <span class="mx-2 text-white" style="min-width:20px; text-align:center">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${i}, 1)"><i class="bi bi-plus"></i></button>
+                            </div>
+                        </td>
+                        <td class="text-end text-gold fw-bold">
+                            $${itemTotal.toFixed(2)}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            ui.cartTotalUSD.innerText = totalUSD.toFixed(2);
+            ui.cartTotalBS.innerText = (totalUSD * state.rate).toFixed(2);
+        }
+
+        // PAYMENT FIELDS
+        ui.paymentMethod.addEventListener('change', (e) => {
+            const container = document.getElementById('paymentFields');
+            const val = e.target.value;
+            
+            let html = '';
+            if (val === 'transferencia' || val === 'pagoMovil') {
+                html = `
+                    <div class="form-floating mb-2">
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="refId" placeholder="Referencia">
+                        <label for="refId" class="text-muted">Número de Referencia (Últimos 4)</label>
+                    </div>
+                `;
+            }
+            if (val === 'pagoMovil') {
+                 html += `
+                    <div class="alert alert-warning py-2 small">
+                        <i class="bi bi-info-circle me-1"></i> Datos: 0414-XXX-XX-XX / V-12345678 / Banco XX
+                    </div>`;
+            }
+            if (val === 'transferencia') {
+                html += `
+                   <div class="form-floating mb-2">
+                       <input type="text" class="form-control bg-dark text-white border-secondary" id="bankName" placeholder="Banco">
+                       <label for="bankName" class="text-muted">Banco Emisor</label>
+                   </div>`;
+           }
+           if (val === 'efectivo') {
+               html = `
+                   <div class="form-floating mb-2">
+                       <input type="number" class="form-control bg-dark text-white border-secondary" id="cashAmount" placeholder="Monto">
+                       <label for="cashAmount" class="text-muted">¿Con cuánto billete cancela?</label>
+                   </div>`;
+           }
+            container.innerHTML = html;
+        });
+        // Trigger initial change
+        ui.paymentMethod.dispatchEvent(new Event('change'));
+
+        // CHECKOUT
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            const method = ui.paymentMethod.options[ui.paymentMethod.selectedIndex].text;
+            const ref = document.getElementById('refId')?.value || 'N/A';
+            const bank = document.getElementById('bankName')?.value || '';
+            const cash = document.getElementById('cashAmount')?.value || '';
+            
+            let details = '';
+            if (bank) details += `\n🏦 Banco: *${bank}*`;
+            if (cash) details += `\n💵 Billete: *${cash}*`;
+            if (ref !== 'N/A') details += `\n🔢 Ref: *${ref}*`;
+
+            let message = `*NUEVO PEDIDO WEB* 🍔\n-------------------------\n`;
+            state.cart.forEach(p => {
+                message += `▪️ ${p.qty}x ${p.name} ($${(p.price * p.qty).toFixed(2)})\n`;
+            });
+            
+            const total = parseFloat(ui.cartTotalUSD.innerText);
+            message += `-------------------------\n`;
+            message += `*TOTAL: $${total.toFixed(2)}*\n`;
+            message += `(Bs ${ui.cartTotalBS.innerText})\n\n`;
+            message += `💳 Método: ${method}${details}`;
+
+            const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUM}&text=${encodeURIComponent(message)}`;
+            
+            // Clear cart logic if desired, or keep until confirmed.
+            // localStorage.removeItem('richardCart');
+            window.open(url, '_blank');
+        });
+
+        window.onload = init;
+
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
